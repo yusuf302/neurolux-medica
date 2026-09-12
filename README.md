@@ -1,13 +1,14 @@
-# NeuroLux Medica Patient Access Console
+# NeuroLux Medica Patient Access Prototype
 
-This is a no-cost static prototype for NeuroLux Medica. It presents the idea as patient-access and revenue-recovery infrastructure for healthcare organizations, using mock clinic data only.
+This is a no-cost static prototype for NeuroLux Medica. It presents the product as patient-access and revenue-recovery infrastructure for healthcare organizations, using mock clinic data only.
 
 ## What it shows
 
-- A WhatsApp-style patient conversation simulator.
-- A mock appointment engine with verified schedule language.
-- A human escalation queue for clinical-risk or uncertain cases.
-- A management dashboard for inquiries, bookings, recovery, and escalations.
+- A buyer-configurable patient journey.
+- A simulated patient conversation that changes based on service, intent, urgency, and preferred time.
+- A mock appointment engine using approved-schedule language.
+- A safe escalation path for clinical-risk or low-confidence cases.
+- Live dashboard metrics for inquiries, bookings, recovered patients, and staff escalations.
 
 ## What it does not do
 
@@ -18,4 +19,4 @@ This is a no-cost static prototype for NeuroLux Medica. It presents the idea as 
 
 ## Running it
 
-Open `index.html` in a browser. The demo is fully static and can be hosted for free with GitHub Pages from the repository root.
+Open `index.html` in a browser. The prototype is fully static and can be hosted for free with GitHub Pages from the repository root.
