@@ -1,14 +1,14 @@
-# NeuroLux Medica Patient Access Prototype
+# NeuroLux Medica Patient Access OS Prototype
 
-This is a no-cost static prototype for NeuroLux Medica. It presents the product as patient-access and revenue-recovery infrastructure for healthcare organizations, using mock clinic data only.
+This is a no-cost React/Vite prototype for NeuroLux Medica. It presents the product as patient-access and revenue-recovery infrastructure for healthcare organizations, using mock clinic data only.
 
 ## What it shows
 
-- A buyer-configurable patient journey.
-- A simulated patient conversation that changes based on service, intent, urgency, and preferred time.
+- A polished buyer-facing healthcare SaaS demo.
+- Interactive modes for booking, recovery, safe escalation, and management view.
+- A simulated patient conversation connected to workflow progress.
 - A mock appointment engine using approved-schedule language.
-- A safe escalation path for clinical-risk or low-confidence cases.
-- Live dashboard metrics for inquiries, bookings, recovered patients, and staff escalations.
+- Executive metrics for inquiries, bookings, recovered demand, attendance, and revenue influenced.
 
 ## What it does not do
 
@@ -19,4 +19,4 @@ This is a no-cost static prototype for NeuroLux Medica. It presents the product 
 
 ## Running it
 
-Open `index.html` in a browser. The prototype is fully static and can be hosted for free with GitHub Pages from the repository root.
+Install dependencies with `pnpm install`, run locally with `pnpm dev`, and build with `pnpm build`. The production build is static and can be hosted for free with GitHub Pages.
