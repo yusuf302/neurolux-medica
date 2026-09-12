@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NeuroLux Medica | Patient Access Console</title>
+    <meta
+      name="description"
+      content="A static no-cost prototype showing NeuroLux Medica as patient-access and revenue-recovery infrastructure for healthcare organizations."
+    >
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b4d5c'/%3E%3Cpath d='M18 34c8-18 20-18 28 0' fill='none' stroke='%2386efac' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 41h24M32 18v28' stroke='%23ffffff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E"
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar" aria-label="Product header">
+        <div>
+          <p class="eyebrow">NeuroLux Medica</p>
+          <h1>Patient Access Console</h1>
+          <p class="subhead">Capture inquiries, guide bookings, recover missed demand, and show operational impact with verified clinic data.</p>
+        </div>
+        <div class="status-strip" aria-label="System status">
+          <span><strong>Demo mode</strong> mock data only</span>
+          <span><strong>0</strong> paid APIs</span>
+          <span><strong>Live-ready</strong> story flow</span>
+        </div>
+      </section>
+
+      <section class="scenario-panel" aria-label="Demo scenarios">
+        <button class="scenario-button active" data-scenario="booking" type="button">
+          <span class="icon">+</span>
+          Service inquiry to booking
+        </button>
+        <button class="scenario-button" data-scenario="recovery" type="button">
+          <span class="icon">↻</span>
+          Abandoned booking recovery
+        </button>
+        <button class="scenario-button" data-scenario="escalation" type="button">
+          <span class="icon">!</span>
+          Clinical-risk escalation
+        </button>
+      </section>
+
+      <section class="workspace-grid">
+        <article class="panel chat-panel" aria-label="Patient conversation">
+          <div class="panel-heading">
+            <div>
+              <p class="label">Patient channel</p>
+              <h2 id="conversation-title">WhatsApp inquiry</h2>
+            </div>
+            <span class="pill" id="conversation-state">Booking assisted</span>
+          </div>
+          <div class="conversation" id="conversation" aria-live="polite"></div>
+          <div class="composer">
+            <span>Verified reply prepared</span>
+            <button id="next-step-button" type="button">Run next step</button>
+          </div>
+        </article>
+
+        <article class="panel booking-panel" aria-label="Appointment booking">
+          <div class="panel-heading">
+            <div>
+              <p class="label">Appointment engine</p>
+              <h2 id="booking-title">Available slot</h2>
+            </div>
+            <span class="pill muted" id="booking-status">Ready</span>
+          </div>
+          <div class="appointment-card">
+            <div>
+              <p class="label">Recommended service</p>
+              <h3 id="service-name">Cardiology consultation</h3>
+            </div>
+            <dl>
+              <div>
+                <dt>Clinician</dt>
+                <dd id="doctor-name">Dr. Asha Mwinyi</dd>
+              </div>
+              <div>
+                <dt>Time</dt>
+                <dd id="slot-time">Tomorrow, 10:30</dd>
+              </div>
+              <div>
+                <dt>Location</dt>
+                <dd id="clinic-location">Oysterbay branch</dd>
+              </div>
+              <div>
+                <dt>Source</dt>
+                <dd>Approved clinic schedule</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="mini-table" aria-label="Alternative slots">
+            <div class="row head"><span>Slot</span><span>Status</span></div>
+            <div class="row"><span id="slot-one">Today 16:00</span><span id="slot-one-status">Busy</span></div>
+            <div class="row"><span id="slot-two">Tomorrow 10:30</span><span id="slot-two-status">Open</span></div>
+            <div class="row"><span id="slot-three">Friday 09:00</span><span id="slot-three-status">Open</span></div>
+          </div>
+        </article>
+
+        <article class="panel metrics-panel" aria-label="Impact metrics">
+          <div class="panel-heading">
+            <div>
+              <p class="label">Management view</p>
+              <h2>Today&apos;s patient access</h2>
+            </div>
+            <span class="pill success" id="impact-label">Improving</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric">
+              <span>Inquiries handled</span>
+              <strong id="metric-inquiries">128</strong>
+            </div>
+            <div class="metric">
+              <span>Bookings created</span>
+              <strong id="metric-bookings">37</strong>
+            </div>
+            <div class="metric">
+              <span>Recovered patients</span>
+              <strong id="metric-recovered">9</strong>
+            </div>
+            <div class="metric">
+              <span>Staff escalations</span>
+              <strong id="metric-escalations">6</strong>
+            </div>
+          </div>
+          <div class="chart" aria-label="Conversion funnel">
+            <div><span style="height: 92%"></span><em>Asked</em></div>
+            <div><span style="height: 76%"></span><em>Qualified</em></div>
+            <div><span style="height: 48%"></span><em>Booked</em></div>
+            <div><span style="height: 39%"></span><em>Attended</em></div>
+          </div>
+        </article>
+
+        <article class="panel escalation-panel" aria-label="Human escalation queue">
+          <div class="panel-heading">
+            <div>
+              <p class="label">Human escalation</p>
+              <h2 id="queue-title">Staff queue</h2>
+            </div>
+            <span class="pill warning" id="queue-count">2 open</span>
+          </div>
+          <div class="queue-list" id="queue-list"></div>
+        </article>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
