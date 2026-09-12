@@ -35,6 +35,45 @@ button {
   padding: 24px;
 }
 
+.top-actions {
+  position: sticky;
+  top: 12px;
+  z-index: 10;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+  pointer-events: none;
+}
+
+.language-switch {
+  display: flex;
+  gap: 4px;
+  max-width: 100%;
+  border: 1px solid rgba(134, 160, 169, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 38px rgba(7, 45, 54, 0.14);
+  padding: 4px;
+  pointer-events: auto;
+}
+
+.language-switch button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #24444d;
+  padding: 0 14px;
+  font-size: 0.88rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.language-switch button.active {
+  background: #062f3a;
+  color: white;
+}
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 470px);
@@ -89,8 +128,8 @@ p {
 h1 {
   max-width: 960px;
   margin-bottom: 12px;
-  font-size: clamp(2.35rem, 5vw, 5.4rem);
-  line-height: 0.95;
+  font-size: clamp(2.2rem, 4vw, 4.8rem);
+  line-height: 1;
 }
 
 h2 {
@@ -144,6 +183,7 @@ h2 {
 
 .mode-bar button {
   display: flex;
+  min-width: 0;
   min-height: 58px;
   align-items: center;
   justify-content: space-between;
@@ -169,6 +209,8 @@ h2 {
 
 .mode-bar span {
   font-weight: 850;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .mode-bar small {
@@ -184,6 +226,7 @@ h2 {
 }
 
 .panel {
+  min-width: 0;
   overflow: hidden;
 }
 
@@ -249,6 +292,26 @@ select {
   line-height: 1.45;
 }
 
+.safety-boundary {
+  display: grid;
+  gap: 7px;
+  margin: 0 18px;
+  padding: 14px;
+  border: 1px solid rgba(146, 64, 14, 0.18);
+  border-radius: 8px;
+  background: #fff7ed;
+  color: #7c2d12;
+  line-height: 1.45;
+}
+
+.safety-boundary strong {
+  color: #6b2f10;
+}
+
+.safety-boundary span {
+  overflow-wrap: anywhere;
+}
+
 .center-stage,
 .right-stage {
   display: grid;
@@ -257,12 +320,15 @@ select {
 
 .status {
   flex: 0 0 auto;
+  max-width: 100%;
   padding: 7px 10px;
   border-radius: 999px;
   background: #e8f3ff;
   color: #1d4ed8;
   font-size: 0.78rem;
   font-weight: 900;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .status.green {
@@ -289,11 +355,13 @@ select {
 
 .bubble {
   display: grid;
+  min-width: 0;
   width: min(86%, 560px);
   gap: 5px;
   padding: 13px 15px;
   border-radius: 8px;
   line-height: 1.45;
+  overflow-wrap: anywhere;
   animation: slideIn 180ms ease both;
 }
 
@@ -322,21 +390,96 @@ select {
 
 .workflow-board {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
   gap: 10px;
   padding: 18px;
 }
 
-.workflow-step {
+.hpi-list {
   display: grid;
-  min-height: 112px;
-  align-content: space-between;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  padding: 18px;
+}
+
+.hpi-item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
   border: 1px solid rgba(134, 160, 169, 0.3);
   border-radius: 8px;
   background: #f8fbfc;
   padding: 12px;
   color: #60737a;
+}
+
+.hpi-item > span {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e8eef1;
+  color: #24444d;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.hpi-item div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.hpi-item strong {
+  color: #1a3740;
+  line-height: 1.25;
+}
+
+.hpi-item small,
+.hpi-item em {
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.hpi-item em {
+  color: #10262d;
+  font-style: normal;
+  font-weight: 820;
+}
+
+.hpi-item.captured {
+  border-color: rgba(15, 111, 126, 0.42);
+  background: linear-gradient(180deg, #ecfbf8, #ffffff);
+}
+
+.hpi-item.captured > span {
+  background: #0f6f7e;
+  color: white;
+}
+
+.hpi-note {
+  margin: 0 18px 18px;
+  border-radius: 8px;
+  background: #eef8f8;
+  color: #31515a;
+  padding: 13px 14px;
+  line-height: 1.45;
+}
+
+.workflow-step {
+  display: grid;
+  min-width: 0;
+  min-height: 128px;
+  align-content: space-between;
+  gap: 10px;
+  border: 1px solid rgba(134, 160, 169, 0.3);
+  border-radius: 8px;
+  background: #f8fbfc;
+  padding: 14px;
+  color: #60737a;
+  overflow-wrap: anywhere;
 }
 
 .workflow-step span {
@@ -351,10 +494,13 @@ select {
 
 .workflow-step strong {
   color: #1a3740;
+  font-size: 1.02rem;
+  line-height: 1.25;
 }
 
 .workflow-step small {
   font-size: 0.78rem;
+  line-height: 1.35;
 }
 
 .workflow-step.done {
@@ -378,6 +524,7 @@ dl div {
   display: flex;
   justify-content: space-between;
   gap: 18px;
+  min-width: 0;
 }
 
 dt {
@@ -385,10 +532,12 @@ dt {
 }
 
 dd {
+  min-width: 0;
   margin: 0;
   color: #10262d;
   font-weight: 850;
   text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .truth-box,
@@ -410,10 +559,12 @@ dd {
 }
 
 .metrics div {
+  min-width: 0;
   border: 1px solid rgba(134, 160, 169, 0.3);
   border-radius: 8px;
   background: #f8fbfc;
   padding: 14px;
+  overflow-wrap: anywhere;
 }
 
 .metrics span,
@@ -429,6 +580,7 @@ dd {
   margin-top: 7px;
   font-size: 1.9rem;
   line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .value-card {
@@ -469,7 +621,7 @@ dd {
   }
 
   .workflow-board {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
 }
 
@@ -479,14 +631,50 @@ dd {
   }
 
   h1 {
-    font-size: 2.45rem;
+    font-size: 2.05rem;
+    line-height: 1.08;
+  }
+
+  .top-actions {
+    top: 8px;
+    justify-content: center;
+  }
+
+  .hero-copy {
+    padding: 20px;
   }
 
   .mode-bar,
   .hero-proof,
-  .workflow-board,
+  .hpi-list,
   .metrics {
     grid-template-columns: 1fr;
+  }
+
+  .workflow-board {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .workflow-step {
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    align-items: center;
+    align-content: center;
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .workflow-step span {
+    grid-row: 1 / span 2;
+  }
+
+  .workflow-step strong {
+    font-size: 1rem;
+  }
+
+  .workflow-step small {
+    justify-self: end;
+    text-align: right;
   }
 
   .mode-bar button,
