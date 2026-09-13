@@ -6,15 +6,18 @@ This is a no-cost React/Vite prototype for NeuroLux Medica. It presents the prod
 
 - A polished buyer-facing healthcare SaaS demo.
 - English and Kiswahili language switching for a Tanzania-ready sales conversation.
-- Interactive modes for booking, recovery, safe escalation, and management view.
+- Role-based views for patient intake, staff workbench, and manager dashboard.
+- Interactive modes for booking, recovered demand, and safe escalation.
 - A simulated patient conversation connected to workflow progress.
 - A structured HPI intake checklist for duration, onset, nature, periodicity, associated factors, relieving factors, and aggravating factors.
+- Browser-only PDF/image attachment preview that shows file metadata without uploading.
 - A mock appointment engine using approved-schedule language.
 - Executive metrics for inquiries, bookings, recovered demand, attendance, and revenue influenced.
 
 ## What it does not do
 
 - It does not use real patient data.
+- It does not upload, store, or transmit attached files.
 - It does not provide medical advice.
 - It does not provide diagnosis or treatment plans.
 - It does not connect to WhatsApp, clinic systems, AI APIs, payment systems, or databases.

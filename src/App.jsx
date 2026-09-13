@@ -2,296 +2,205 @@ import { useEffect, useMemo, useState } from "react";
 
 const LANG_STORAGE_KEY = "neurolux-language";
 
-const copy = {
+const translations = {
   en: {
-    languageLabel: "Choose language",
     brand: "NeuroLux Medica",
-    mark: "NL",
-    heroTitle: "Patient-access infrastructure for clinics that cannot afford to lose demand.",
+    chooseLanguage: "Choose language",
+    heroTitle: "A patient-access system for Tanzanian clinics, from first message to booked visit.",
     heroBody:
-      "A complete prototype of the AI receptionist, verified appointment workflow, recovery engine, escalation queue, and management dashboard that turns patient interest into measurable care activity.",
-    proof: [
-      ["Average first reply", "8 sec"],
-      ["Weekly recovered demand", "34 patients"],
-      ["Mock value influenced", "TZS 18.6M"],
+      "This prototype shows how NeuroLux can collect safe intake details, understand booking intent, route risky cases to staff, and give managers a live view of demand, recovery, and clinic capacity.",
+    metrics: [
+      ["First response", "8 sec"],
+      ["Recovered demand", "34 patients"],
+      ["Attendance lift", "+17%"],
+      ["Mock value", "TZS 18.6M"],
     ],
-    safetyBoundary: {
-      title: "Safe HPI intake only",
-      body: "This prototype collects access and intake information only. It does not provide diagnosis or treatment advice.",
+    roles: {
+      patient: "Patient",
+      staff: "Staff",
+      manager: "Manager",
     },
-    modesAria: "Demo modes",
     modes: {
-      book: {
-        label: "Book a patient",
-        intent: "New patient asks for care and wants the earliest useful appointment.",
-        headline: "Inquiry converted into a confirmed visit",
-        outcome: "Booked",
-        accent: "blue",
-      },
-      recover: {
-        label: "Recover missed demand",
-        intent: "Patient started booking, disappeared, then replies to a recovery prompt.",
-        headline: "Abandoned demand recovered before it is lost",
-        outcome: "Recovered",
-        accent: "green",
-      },
-      escalate: {
-        label: "Escalate safely",
-        intent: "Patient message includes risk or uncertainty that should not be handled by automation.",
-        headline: "Automation stops and routes to clinical staff",
-        outcome: "Escalated",
-        accent: "amber",
-      },
-      manager: {
-        label: "Manager view",
-        intent: "Leadership wants proof that access workflows are improving conversion.",
-        headline: "Management sees the value created",
-        outcome: "Measured",
-        accent: "violet",
-      },
+      book: "Book a patient",
+      recover: "Recover missed demand",
+      escalate: "Escalate safely",
     },
-    services: {
-      cardiology: {
-        name: "Cardiology",
-        fullName: "Cardiology consultation",
-        doctor: "Dr. Asha Mwinyi",
-        branch: "Oysterbay Specialist Centre",
-        price: "TZS 85,000",
-        slot: "Tomorrow, 10:30",
-        downstream: "ECG and lab referral readiness",
-      },
-      diagnostics: {
-        name: "Diagnostics",
-        fullName: "Ultrasound scan",
-        doctor: "Diagnostics team",
-        branch: "Masaki Imaging Wing",
-        price: "TZS 120,000",
-        slot: "Today, 15:20",
-        downstream: "Radiology report follow-up",
-      },
-      dental: {
-        name: "Dental",
-        fullName: "Dental treatment",
-        doctor: "Dr. Neema Joseph",
-        branch: "City Dental Suite",
-        price: "From TZS 60,000",
-        slot: "Today, 11:15",
-        downstream: "Treatment-plan conversion",
-      },
-      pediatrics: {
-        name: "Pediatrics",
-        fullName: "Pediatric clinic",
-        doctor: "Dr. Baraka Mushi",
-        branch: "Mikocheni Family Wing",
-        price: "TZS 70,000",
-        slot: "Tomorrow, 09:10",
-        downstream: "Immunization and follow-up recall",
-      },
+    modeDescriptions: {
+      book: "A patient completes HPI intake and chooses an available clinic slot.",
+      recover: "A patient abandons the journey, then returns from a recovery reminder.",
+      escalate: "Risk or unclear wording stops automation and sends the case to staff.",
     },
-    stages: ["Capture", "HPI intake", "Verify service", "Book or escalate", "Follow up", "Measure"],
+    controls: {
+      title: "Live demo controls",
+      service: "Service",
+      branch: "Clinic branch",
+      urgency: "Patient signal",
+      next: "Next step",
+      back: "Back",
+      reset: "Reset demo",
+      upload: "Attach history file",
+      uploadHelp: "PDF or image preview only. Nothing is uploaded or stored.",
+      noFile: "No file attached",
+      fileReady: "File ready for preview",
+      consent: "Patient confirms this is intake for booking and staff review only.",
+    },
+    steps: ["Patient details", "Service need", "Safe HPI intake", "History upload", "Appointment slot", "Confirmation"],
+    fields: {
+      patient: "Patient name",
+      phone: "Phone",
+      channel: "Preferred channel",
+      insurance: "Payment / insurance",
+      clinician: "Clinician",
+      branch: "Branch",
+      slot: "Preferred slot",
+      status: "Case status",
+    },
+    patient: {
+      title: "Patient intake",
+      subtitle: "Guided form plus chat, designed for phone-first access.",
+      name: "Amina Juma",
+      phone: "+255 712 456 900",
+      channel: "WhatsApp",
+      insurance: "Cash / mobile money",
+      confirmed: "Booking confirmed",
+      waiting: "Waiting for patient",
+      recovered: "Recovered from reminder",
+      escalated: "Human review required",
+    },
     hpi: {
-      eyebrow: "Structured HPI",
       title: "History of Presenting Illness",
-      complete: "Captured",
-      waiting: "Waiting",
-      note: "The system stops after these intake fields and hands risk to staff.",
+      boundary: "NeuroLux collects only these seven HPI fields. It does not diagnose, advise treatment, or keep asking about sickness beyond this checklist.",
+      waiting: "Waiting for response",
       items: [
         ["Duration", "How long has this been happening?", "3 days"],
         ["Onset", "Did it start suddenly or gradually?", "Started gradually"],
         ["Nature", "How would you describe what you are feeling?", "Intermittent discomfort"],
         ["Periodicity", "Does it come and go, or is it constant?", "Comes and goes"],
         ["Associated factors", "Is there anything else happening with it?", "Mild fatigue"],
-        ["Relieving factors", "What seems to make it better?", "Resting helps a little"],
+        ["Relieving factors", "What seems to make it better?", "Rest helps a little"],
         ["Aggravating factors", "What seems to make it worse?", "Worse after exertion"],
       ],
     },
-    controls: {
-      eyebrow: "Demo builder",
-      title: "Shape the clinic case",
-      service: "Service line",
-      risk: "Patient risk",
-      branch: "Deployment branch",
-      run: "Run next workflow step",
-      riskOptions: {
-        normal: "Routine access request",
-        "same-day": "Same-day pressure",
-        "clinical-risk": "Clinical-risk wording",
-        "low-confidence": "Unclear request",
-      },
-      branches: {
-        primary: "Primary clinic branch",
-        specialist: "Specialist wing",
-        diagnostic: "Diagnostics center",
-      },
+    services: {
+      cardiology: ["Cardiology consultation", "Dr. Asha Mwinyi", "TZS 85,000", "Tomorrow, 10:30"],
+      diagnostics: ["Ultrasound scan", "Diagnostics team", "TZS 120,000", "Today, 15:20"],
+      dental: ["Dental treatment", "Dr. Neema Joseph", "From TZS 60,000", "Today, 11:15"],
+      pediatrics: ["Pediatric clinic", "Dr. Baraka Mushi", "TZS 70,000", "Tomorrow, 09:10"],
     },
-    conversation: {
-      eyebrow: "AI receptionist",
-      title: "Verified patient conversation",
-      ready: "Ready to book",
-      review: "Human review required",
-      speakers: {
-        patient: "Patient",
-        neurolux: "NeuroLux",
-        clinical: "Clinical desk",
-        operations: "Operations lead",
-      },
+    branches: {
+      oysterbay: "Oysterbay Specialist Centre",
+      masaki: "Masaki Imaging Wing",
+      mikocheni: "Mikocheni Family Wing",
     },
-    workflow: {
-      eyebrow: "Clinic workflow",
-      title: "From inquiry to measurable outcome",
-      step: "Step",
-      of: "of",
-      complete: "Complete",
-      waiting: "Waiting",
+    urgency: {
+      routine: "Routine access request",
+      sameDay: "Same-day pressure",
+      risk: "Clinical-risk wording",
+      unclear: "Unclear request",
     },
-    appointment: {
-      eyebrow: "Appointment engine",
-      paused: "Paused for safety",
-      clinician: "Clinician",
-      slot: "Slot",
-      branch: "Branch",
-      price: "Approved price",
-      immediate: "Immediate callback",
-      staffConfirms: "Staff confirms",
-      clinicalDesk: "Clinical desk",
-      truth: "Truth comes from approved clinic data, not model memory.",
+    chat: {
+      title: "NeuroLux AI receptionist",
+      patient: "Patient",
+      neurolux: "NeuroLux",
+      staff: "Clinical desk",
+      manager: "Manager",
+      safeStop:
+        "I cannot assess symptoms or give medical advice in this chat. I am alerting clinic staff so a qualified person can review and call back.",
     },
-    dashboard: {
-      eyebrow: "Executive dashboard",
-      title: "Impact snapshot",
-      inquiries: "Inquiries",
-      bookings: "Bookings",
-      recovered: "Recovered",
+    staff: {
+      title: "Staff workbench",
+      subtitle: "The clinic sees the exact packet needed to confirm, call back, or escalate.",
+      packet: "Intake packet",
+      queue: "Escalation queue",
+      actionPrimary: "Confirm booking",
+      actionRisk: "Call patient now",
+      review: "Ready for staff review",
+      source: "Source of truth: approved clinic services, slots, prices, and patient-provided intake.",
+      upload: "Attached history",
+    },
+    manager: {
+      title: "Executive view",
+      subtitle: "A buyer sees the operational value without needing a backend demo.",
+      conversion: "Conversion",
+      recovered: "Recovered demand",
       attendance: "Attendance",
+      workload: "Staff workload saved",
       revenue: "Revenue influenced",
-      disclaimer: "Mock estimate for demo only",
-      trust: "Trust protected",
+      funnel: "Clinic revenue leakage",
+      funnelLabels: ["Inquiry", "HPI", "Booking", "Attendance"],
+      insight: "Structured HPI plus fast booking reduces back-and-forth and protects staff time.",
     },
-    safety: {
-      eyebrow: "Safety center",
-      activeTitle: "Escalation active",
-      normalTitle: "Exceptions monitored",
-      active:
-        "Clinical-risk or low-confidence language detected. Automation stops, staff are alerted, and the patient receives safe routing.",
-      normal: "Routine case. Staff only see exceptions, insurance checks, and follow-up needs.",
-    },
-    messages: {
-      riskPatient: (service) =>
-        `I need help with ${service.fullName.toLowerCase()}, but I also have chest pain and trouble breathing.`,
-      riskSystem:
-        "I cannot assess symptoms or give medical advice in this chat. I am alerting the clinic team now so a qualified staff member can review and call back according to clinic policy.",
-      riskClinical: (service) =>
-        `High-priority case opened for ${service.branch}. Staff receive the patient request, service context, and callback need.`,
-      recoverPatient: (service) => `I started booking ${service.fullName.toLowerCase()} but did not finish.`,
-      recoverSystem: (service) =>
-        `I saved the completed intake summary. The ${service.slot} slot is still available at ${service.branch}. Would you like me to reserve it?`,
-      recoverPatientYes: "Yes, please reserve it.",
-      recoverConfirm: (service) =>
-        `Confirmed with ${service.doctor}. A reminder is scheduled, and this is marked as recovered demand.`,
-      managerLead: "Show me where patient demand is leaking this week.",
-      managerInsight: "Most leakage is happening after inquiry qualification and before appointment confirmation.",
-      managerOpportunity: (service) =>
-        `${service.fullName} has the strongest recovery opportunity because ${service.downstream.toLowerCase()} can be triggered after booking.`,
-      bookPatient: (service) => `Hi, do you have ${service.fullName.toLowerCase()} available soon?`,
-      bookSystem: (service) =>
-        `Yes. Before booking, I will capture a short HPI intake only: duration, onset, nature, periodicity, associated factors, relieving factors, and aggravating factors.`,
-      bookPatientAsk: "I have answered the intake questions. Can you book the visit and send the details?",
-      bookConfirm: (service) =>
-        `Booked. The approved price is ${service.price}. Confirmation, location, and reminder are ready.`,
-    },
+    workflow: ["Capture", "HPI intake", "Verify service", "Book or escalate", "Follow up", "Measure"],
+    disclaimer: "Demo only. No real patient data, no file upload, no diagnosis, no treatment plan.",
   },
   sw: {
-    languageLabel: "Chagua lugha",
     brand: "NeuroLux Medica",
-    mark: "NL",
-    heroTitle: "Miundombinu ya upatikanaji wa huduma kwa kliniki zisizopaswa kupoteza mahitaji ya wagonjwa.",
+    chooseLanguage: "Chagua lugha",
+    heroTitle: "Mfumo wa upatikanaji wa huduma kwa kliniki za Tanzania, kutoka ujumbe wa kwanza hadi miadi.",
     heroBody:
-      "Mfano kamili wa mpokezi wa kidijitali, mtiririko uliothibitishwa wa miadi, urejeshaji wa wagonjwa waliokwama, rufaa kwa wahudumu, na dashibodi ya uongozi inayogeuza nia ya mgonjwa kuwa shughuli ya huduma inayopimika.",
-    proof: [
-      ["Muda wa jibu la kwanza", "sek 8"],
-      ["Mahitaji yaliyorejeshwa kwa wiki", "wagonjwa 34"],
-      ["Thamani ya mfano iliyoathiriwa", "TZS 18.6M"],
+      "Mfano huu unaonyesha jinsi NeuroLux inavyoweza kukusanya taarifa salama za awali, kuelewa nia ya kuweka miadi, kupeleka kesi hatarishi kwa wahudumu, na kuonyesha uongozi mahitaji ya wagonjwa na uwezo wa kliniki.",
+    metrics: [
+      ["Jibu la kwanza", "sek 8"],
+      ["Mahitaji yaliyorejeshwa", "wagonjwa 34"],
+      ["Ongezeko la mahudhurio", "+17%"],
+      ["Thamani ya mfano", "TZS 18.6M"],
     ],
-    safetyBoundary: {
-      title: "HPI salama pekee",
-      body: "Mfumo huu unakusanya taarifa za awali na miadi pekee. Hautoi utambuzi wala mpango wa matibabu.",
+    roles: {
+      patient: "Mgonjwa",
+      staff: "Wahudumu",
+      manager: "Meneja",
     },
-    modesAria: "Njia za onyesho",
     modes: {
-      book: {
-        label: "Mweke mgonjwa kwenye miadi",
-        intent: "Mgonjwa mpya anaulizia huduma na anataka muda wa karibu unaofaa.",
-        headline: "Swali limegeuzwa kuwa ziara iliyothibitishwa",
-        outcome: "Amewekewa",
-        accent: "blue",
-      },
-      recover: {
-        label: "Rejesha mahitaji yaliyopotea",
-        intent: "Mgonjwa alianza kuweka miadi, akaacha, kisha akajibu ujumbe wa kumrudisha.",
-        headline: "Mahitaji yaliyokwama yamerejeshwa kabla hayajapotea",
-        outcome: "Yamerejeshwa",
-        accent: "green",
-      },
-      escalate: {
-        label: "Pandisha kwa usalama",
-        intent: "Ujumbe wa mgonjwa una hatari au kutokuwa wazi kunakohitaji mhudumu wa kliniki.",
-        headline: "Mfumo unasimama na kumpeleka mgonjwa kwa wahudumu",
-        outcome: "Imepandishwa",
-        accent: "amber",
-      },
-      manager: {
-        label: "Mwonekano wa meneja",
-        intent: "Uongozi unataka ushahidi kuwa mtiririko wa upatikanaji unaongeza ubadilishaji.",
-        headline: "Uongozi unaona thamani iliyotengenezwa",
-        outcome: "Imepimwa",
-        accent: "violet",
-      },
+      book: "Weka miadi",
+      recover: "Rejesha aliyekwama",
+      escalate: "Pandisha kwa usalama",
     },
-    services: {
-      cardiology: {
-        name: "Moyo",
-        fullName: "Ushauri wa moyo",
-        doctor: "Dr. Asha Mwinyi",
-        branch: "Oysterbay Specialist Centre",
-        price: "TZS 85,000",
-        slot: "Kesho, 10:30",
-        downstream: "utayari wa ECG na rufaa ya vipimo",
-      },
-      diagnostics: {
-        name: "Vipimo",
-        fullName: "Kipimo cha ultrasound",
-        doctor: "Timu ya vipimo",
-        branch: "Masaki Imaging Wing",
-        price: "TZS 120,000",
-        slot: "Leo, 15:20",
-        downstream: "ufuatiliaji wa ripoti ya radiolojia",
-      },
-      dental: {
-        name: "Meno",
-        fullName: "Huduma ya meno",
-        doctor: "Dr. Neema Joseph",
-        branch: "City Dental Suite",
-        price: "Kuanzia TZS 60,000",
-        slot: "Leo, 11:15",
-        downstream: "ubadilishaji wa mpango wa matibabu",
-      },
-      pediatrics: {
-        name: "Watoto",
-        fullName: "Kliniki ya watoto",
-        doctor: "Dr. Baraka Mushi",
-        branch: "Mikocheni Family Wing",
-        price: "TZS 70,000",
-        slot: "Kesho, 09:10",
-        downstream: "chanjo na ukumbusho wa ufuatiliaji",
-      },
+    modeDescriptions: {
+      book: "Mgonjwa anakamilisha HPI na kuchagua muda wa kliniki.",
+      recover: "Mgonjwa anaacha mchakato, kisha anarudi baada ya ukumbusho.",
+      escalate: "Maneno hatarishi au yasiyo wazi yanasimamisha mfumo na kupeleka kesi kwa wahudumu.",
     },
-    stages: ["Pokea", "HPI ya awali", "Thibitisha huduma", "Weka miadi au pandisha", "Fuatilia", "Pima"],
+    controls: {
+      title: "Vidhibiti vya onyesho",
+      service: "Huduma",
+      branch: "Tawi la kliniki",
+      urgency: "Ishara ya mgonjwa",
+      next: "Hatua inayofuata",
+      back: "Rudi",
+      reset: "Anza upya",
+      upload: "Ambatanisha historia",
+      uploadHelp: "PDF au picha kwa onyesho pekee. Hakuna kinachopakiwa au kuhifadhiwa.",
+      noFile: "Hakuna faili",
+      fileReady: "Faili iko tayari kwa mwonekano",
+      consent: "Mgonjwa anakubali kuwa hii ni taarifa za awali kwa miadi na mapitio ya wahudumu tu.",
+    },
+    steps: ["Taarifa za mgonjwa", "Hitaji la huduma", "HPI salama", "Historia ya faili", "Muda wa miadi", "Uthibitisho"],
+    fields: {
+      patient: "Jina la mgonjwa",
+      phone: "Simu",
+      channel: "Njia anayopendelea",
+      insurance: "Malipo / bima",
+      clinician: "Mhudumu",
+      branch: "Tawi",
+      slot: "Muda anaopendelea",
+      status: "Hali ya kesi",
+    },
+    patient: {
+      title: "Taarifa za mgonjwa",
+      subtitle: "Fomu elekezi na mazungumzo, iliyoundwa kwa matumizi ya simu.",
+      name: "Amina Juma",
+      phone: "+255 712 456 900",
+      channel: "WhatsApp",
+      insurance: "Pesa taslimu / mobile money",
+      confirmed: "Miadi imethibitishwa",
+      waiting: "Inamsubiri mgonjwa",
+      recovered: "Amerejeshwa kwa ukumbusho",
+      escalated: "Inahitaji mapitio ya mhudumu",
+    },
     hpi: {
-      eyebrow: "HPI iliyopangwa",
       title: "Historia ya ugonjwa uliopo",
-      complete: "Imekusanywa",
-      waiting: "Inasubiri",
-      note: "Mfumo unasimama baada ya taarifa hizi na kupeleka hatari kwa wahudumu.",
+      boundary: "NeuroLux hukusanya vipengele hivi saba tu vya HPI. Haitoi utambuzi, ushauri wa matibabu, wala haiendelei kuuliza zaidi kuhusu ugonjwa nje ya orodha hii.",
+      waiting: "Inasubiri jibu",
       items: [
         ["Muda", "Hali hii imekuwepo kwa muda gani?", "Siku 3"],
         ["Mwanzo", "Ilianza ghafla au taratibu?", "Ilianza taratibu"],
@@ -302,212 +211,175 @@ const copy = {
         ["Yanayoongeza", "Nini kinaonekana kuongeza hali hiyo?", "Inaongezeka baada ya kujitahidi"],
       ],
     },
-    controls: {
-      eyebrow: "Kijenzi cha onyesho",
-      title: "Tengeneza kesi ya kliniki",
-      service: "Aina ya huduma",
-      risk: "Hatari ya mgonjwa",
-      branch: "Tawi la utekelezaji",
-      run: "Endesha hatua inayofuata",
-      riskOptions: {
-        normal: "Ombi la kawaida la huduma",
-        "same-day": "Uhitaji wa siku hiyo hiyo",
-        "clinical-risk": "Maneno yenye hatari ya kitabibu",
-        "low-confidence": "Ombi lisilo wazi",
-      },
-      branches: {
-        primary: "Tawi kuu la kliniki",
-        specialist: "Kitengo cha bingwa",
-        diagnostic: "Kituo cha vipimo",
-      },
+    services: {
+      cardiology: ["Ushauri wa moyo", "Dr. Asha Mwinyi", "TZS 85,000", "Kesho, 10:30"],
+      diagnostics: ["Kipimo cha ultrasound", "Timu ya vipimo", "TZS 120,000", "Leo, 15:20"],
+      dental: ["Huduma ya meno", "Dr. Neema Joseph", "Kuanzia TZS 60,000", "Leo, 11:15"],
+      pediatrics: ["Kliniki ya watoto", "Dr. Baraka Mushi", "TZS 70,000", "Kesho, 09:10"],
     },
-    conversation: {
-      eyebrow: "Mpokezi wa kidijitali",
-      title: "Mazungumzo ya mgonjwa yaliyothibitishwa",
-      ready: "Tayari kuweka miadi",
-      review: "Inahitaji mapitio ya mfanyakazi",
-      speakers: {
-        patient: "Mgonjwa",
-        neurolux: "NeuroLux",
-        clinical: "Dawati la kliniki",
-        operations: "Kiongozi wa uendeshaji",
-      },
+    branches: {
+      oysterbay: "Oysterbay Specialist Centre",
+      masaki: "Masaki Imaging Wing",
+      mikocheni: "Mikocheni Family Wing",
     },
-    workflow: {
-      eyebrow: "Mtiririko wa kliniki",
-      title: "Kutoka swali la mgonjwa hadi matokeo yanayopimika",
-      step: "Hatua",
-      of: "kati ya",
-      complete: "Imekamilika",
-      waiting: "Inasubiri",
+    urgency: {
+      routine: "Ombi la kawaida",
+      sameDay: "Uhitaji wa siku hiyo hiyo",
+      risk: "Maneno yenye hatari ya kitabibu",
+      unclear: "Ombi lisilo wazi",
     },
-    appointment: {
-      eyebrow: "Injini ya miadi",
-      paused: "Imesitishwa kwa usalama",
-      clinician: "Mhudumu",
-      slot: "Muda",
-      branch: "Tawi",
-      price: "Bei iliyoidhinishwa",
-      immediate: "Simu ya haraka",
-      staffConfirms: "Mfanyakazi athibitishe",
-      clinicalDesk: "Dawati la kliniki",
-      truth: "Taarifa hutoka kwenye data iliyoidhinishwa ya kliniki, si kumbukumbu ya mfumo.",
+    chat: {
+      title: "Mpokezi wa kidijitali wa NeuroLux",
+      patient: "Mgonjwa",
+      neurolux: "NeuroLux",
+      staff: "Dawati la kliniki",
+      manager: "Meneja",
+      safeStop:
+        "Siwezi kutathmini dalili wala kutoa ushauri wa matibabu kwenye mazungumzo haya. Ninaiarifu timu ya kliniki ili mhudumu mwenye sifa akague na kupiga simu.",
     },
-    dashboard: {
-      eyebrow: "Dashibodi ya uongozi",
-      title: "Muhtasari wa matokeo",
-      inquiries: "Maulizo",
-      bookings: "Miadi",
-      recovered: "Waliorejeshwa",
+    staff: {
+      title: "Sehemu ya wahudumu",
+      subtitle: "Kliniki inaona taarifa muhimu za kuthibitisha, kupiga simu, au kupandisha kesi.",
+      packet: "Pakiti ya taarifa",
+      queue: "Foleni ya mapitio",
+      actionPrimary: "Thibitisha miadi",
+      actionRisk: "Mpigie mgonjwa sasa",
+      review: "Tayari kwa mapitio",
+      source: "Chanzo sahihi: huduma, muda, bei zilizoidhinishwa na taarifa alizotoa mgonjwa.",
+      upload: "Historia iliyoambatanishwa",
+    },
+    manager: {
+      title: "Mwonekano wa uongozi",
+      subtitle: "Mnunuzi anaona thamani ya uendeshaji bila kuhitaji mfumo wa nyuma.",
+      conversion: "Ubadilishaji",
+      recovered: "Mahitaji yaliyorejeshwa",
       attendance: "Mahudhurio",
+      workload: "Muda wa wahudumu uliookolewa",
       revenue: "Mapato yaliyoathiriwa",
-      disclaimer: "Makadirio ya mfano kwa onyesho pekee",
-      trust: "Uaminifu umelindwa",
+      funnel: "Upotevu wa mapato ya kliniki",
+      funnelLabels: ["Swali", "HPI", "Miadi", "Mahudhurio"],
+      insight: "HPI iliyopangwa pamoja na miadi ya haraka hupunguza kurudiana ujumbe na kulinda muda wa wahudumu.",
     },
-    safety: {
-      eyebrow: "Kituo cha usalama",
-      activeTitle: "Rufaa kwa wahudumu imewashwa",
-      normalTitle: "Mambo yasiyo ya kawaida yanafuatiliwa",
-      active:
-        "Maneno yenye hatari ya kitabibu au ombi lisilo wazi yameonekana. Mfumo unasimama, wahudumu wanaarifiwa, na mgonjwa anapewa njia salama ya huduma.",
-      normal: "Kesi ya kawaida. Wahudumu wanaona tu mambo maalum, ukaguzi wa bima, na mahitaji ya ufuatiliaji.",
-    },
-    messages: {
-      riskPatient: (service) =>
-        `Nahitaji msaada kuhusu ${service.fullName.toLowerCase()}, lakini pia nina maumivu ya kifua na shida ya kupumua.`,
-      riskSystem:
-        "Siwezi kutathmini dalili wala kutoa ushauri wa matibabu kwenye mazungumzo haya. Ninaiarifu timu ya kliniki sasa ili mhudumu mwenye sifa akague na kupiga simu kulingana na sera ya kliniki.",
-      riskClinical: (service) =>
-        `Kesi ya kipaumbele imefunguliwa kwa ${service.branch}. Wahudumu wanapokea ombi la mgonjwa, muktadha wa huduma, na hitaji la kumpigia simu.`,
-      recoverPatient: (service) => `Nilianza kuweka miadi ya ${service.fullName.toLowerCase()} lakini sikumaliza.`,
-      recoverSystem: (service) =>
-        `Nimehifadhi muhtasari wa taarifa za awali. Muda wa ${service.slot} bado upo ${service.branch}. Ungependa niuhifadhi kwa ajili yako?`,
-      recoverPatientYes: "Ndiyo, tafadhali uhifadhi.",
-      recoverConfirm: (service) =>
-        `Imethibitishwa na ${service.doctor}. Ukumbusho umepangwa, na kesi hii imewekwa kama mahitaji yaliyorejeshwa.`,
-      managerLead: "Nionyeshe sehemu mahitaji ya wagonjwa yanapopotea wiki hii.",
-      managerInsight: "Upotevu mkubwa unatokea baada ya kuelewa ombi na kabla ya kuthibitisha miadi.",
-      managerOpportunity: (service) =>
-        `${service.fullName} ina nafasi kubwa ya kurejesha wagonjwa kwa sababu ${service.downstream} kinaweza kuanzishwa baada ya miadi.`,
-      bookPatient: (service) => `Habari, je ${service.fullName.toLowerCase()} inapatikana hivi karibuni?`,
-      bookSystem: (service) =>
-        `Ndiyo. Kabla ya kuweka miadi, nitakusanya HPI fupi pekee: muda, mwanzo, aina, muendelezo, mambo yanayoambatana, yanayopunguza, na yanayoongeza.`,
-      bookPatientAsk: "Nimejibu maswali ya awali. Unaweza kuniwekea miadi na kunitumia maelezo?",
-      bookConfirm: (service) =>
-        `Umewekewa miadi. Bei iliyoidhinishwa ni ${service.price}. Uthibitisho, eneo, na ukumbusho viko tayari.`,
-    },
+    workflow: ["Pokea", "HPI ya awali", "Thibitisha huduma", "Weka miadi au pandisha", "Fuatilia", "Pima"],
+    disclaimer: "Onyesho pekee. Hakuna data halisi ya mgonjwa, hakuna faili inayopakiwa, hakuna utambuzi, hakuna mpango wa matibabu.",
   },
 };
 
-function getInitialLanguage() {
+const serviceKeys = ["cardiology", "diagnostics", "dental", "pediatrics"];
+const branchKeys = ["oysterbay", "masaki", "mikocheni"];
+const urgencyKeys = ["routine", "sameDay", "risk", "unclear"];
+
+function initialLanguage() {
   if (typeof window === "undefined") return "en";
   return window.localStorage.getItem(LANG_STORAGE_KEY) || "en";
 }
 
-function makeConversation(mode, service, urgency, t) {
-  const risky = mode === "escalate" || urgency === "clinical-risk" || urgency === "low-confidence";
-  const speakers = t.conversation.speakers;
-
-  if (risky) {
-    return [
-      [speakers.patient, t.messages.riskPatient(service)],
-      [speakers.neurolux, t.messages.riskSystem],
-      [speakers.clinical, t.messages.riskClinical(service)],
-    ];
-  }
-
-  if (mode === "recover") {
-    return [
-      [speakers.patient, t.messages.recoverPatient(service)],
-      [speakers.neurolux, t.messages.recoverSystem(service)],
-      [speakers.patient, t.messages.recoverPatientYes],
-      [speakers.neurolux, t.messages.recoverConfirm(service)],
-    ];
-  }
-
-  if (mode === "manager") {
-    return [
-      [speakers.operations, t.messages.managerLead],
-      [speakers.neurolux, t.messages.managerInsight],
-      [speakers.neurolux, t.messages.managerOpportunity(service)],
-    ];
-  }
-
-  return [
-    [speakers.patient, t.messages.bookPatient(service)],
-    [speakers.neurolux, t.messages.bookSystem(service)],
-    [speakers.patient, t.messages.bookPatientAsk],
-    [speakers.neurolux, t.messages.bookConfirm(service)],
-  ];
-}
-
-function makeMetrics(mode, trustLabel) {
-  if (mode === "recover") return { inquiries: 184, bookings: 58, recovered: 21, attendance: "82%", value: "TZS 7.4M" };
-  if (mode === "escalate") return { inquiries: 171, bookings: 49, recovered: 13, attendance: "79%", value: trustLabel };
-  if (mode === "manager") return { inquiries: 312, bookings: 96, recovered: 34, attendance: "86%", value: "TZS 18.6M" };
-  return { inquiries: 166, bookings: 54, recovered: 12, attendance: "81%", value: "TZS 5.8M" };
-}
-
-function speakerClass(speaker, speakers) {
-  if (speaker === speakers.patient || speaker === speakers.operations) return "patient";
-  if (speaker === speakers.clinical) return "staff";
-  return "system";
+function fileLabel(file) {
+  if (!file) return "";
+  const kb = Math.max(1, Math.round(file.size / 1024));
+  return `${file.name} - ${file.type || "file"} - ${kb} KB`;
 }
 
 export default function App() {
-  const [language, setLanguage] = useState(getInitialLanguage);
+  const [language, setLanguage] = useState(initialLanguage);
+  const [role, setRole] = useState("patient");
   const [mode, setMode] = useState("book");
   const [serviceKey, setServiceKey] = useState("cardiology");
-  const [urgency, setUrgency] = useState("normal");
-  const [branch, setBranch] = useState("primary");
-  const [step, setStep] = useState(3);
+  const [branchKey, setBranchKey] = useState("oysterbay");
+  const [urgency, setUrgency] = useState("routine");
+  const [step, setStep] = useState(2);
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [staffAction, setStaffAction] = useState("");
 
-  const t = copy[language];
-  const service = t.services[serviceKey];
-  const selectedMode = t.modes[mode];
-  const risky = mode === "escalate" || urgency === "clinical-risk" || urgency === "low-confidence";
-  const conversation = useMemo(() => makeConversation(mode, service, urgency, t), [mode, service, urgency, t]);
-  const metrics = makeMetrics(mode, t.dashboard.trust);
-  const visibleMessages = conversation.slice(0, Math.min(conversation.length, step + 1));
-  const hpiCaptured = risky ? 0 : mode === "recover" ? 4 : step >= 3 ? t.hpi.items.length : Math.min(t.hpi.items.length, step + 3);
+  const t = translations[language];
+  const [service, clinician, price, slot] = t.services[serviceKey];
+  const risky = mode === "escalate" || urgency === "risk" || urgency === "unclear";
+  const recovered = mode === "recover";
+  const capturedHpi = risky ? 0 : recovered ? 4 : Math.min(t.hpi.items.length, step + 3);
+  const status = risky ? t.patient.escalated : recovered ? t.patient.recovered : step >= 5 ? t.patient.confirmed : t.patient.waiting;
+
+  const chat = useMemo(() => {
+    if (risky) {
+      return [
+        [t.chat.patient, `${t.modeDescriptions.escalate} ${service}.`],
+        [t.chat.neurolux, t.chat.safeStop],
+        [t.chat.staff, `${t.staff.review}: ${t.branches[branchKey]}.`],
+      ];
+    }
+    if (recovered) {
+      return [
+        [t.chat.patient, t.modeDescriptions.recover],
+        [t.chat.neurolux, `${t.controls.uploadHelp} ${t.hpi.title}: ${capturedHpi} / ${t.hpi.items.length}.`],
+        [t.chat.patient, language === "en" ? "Yes, reserve the available slot." : "Ndiyo, hifadhi muda uliopo."],
+        [t.chat.neurolux, `${service} - ${slot} - ${clinician}.`],
+      ];
+    }
+    return [
+      [t.chat.patient, language === "en" ? `I want to book ${service}.` : `Nataka kuweka miadi ya ${service}.`],
+      [t.chat.neurolux, t.hpi.boundary],
+      [t.chat.patient, language === "en" ? "I completed the intake and selected my preferred time." : "Nimekamilisha taarifa za awali na kuchagua muda."],
+      [t.chat.neurolux, `${service} - ${slot} - ${clinician} - ${price}.`],
+    ];
+  }, [branchKey, capturedHpi, clinician, language, price, recovered, risky, service, slot, t]);
+
+  const managerStats = risky
+    ? [["171", t.manager.conversion], ["13", t.manager.recovered], ["79%", t.manager.attendance], ["6.4h", t.manager.workload]]
+    : recovered
+      ? [["184", t.manager.conversion], ["21", t.manager.recovered], ["82%", t.manager.attendance], ["9.1h", t.manager.workload]]
+      : [["166", t.manager.conversion], ["12", t.manager.recovered], ["81%", t.manager.attendance], ["7.8h", t.manager.workload]];
 
   useEffect(() => {
     window.localStorage.setItem(LANG_STORAGE_KEY, language);
     document.documentElement.lang = language === "sw" ? "sw-TZ" : "en";
   }, [language]);
 
-  function chooseMode(nextMode) {
+  useEffect(() => {
+    if (!file || !file.type.startsWith("image/")) {
+      setPreviewUrl("");
+      return undefined;
+    }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  function setScenario(nextMode) {
     setMode(nextMode);
-    setUrgency(nextMode === "escalate" ? "clinical-risk" : "normal");
+    setUrgency(nextMode === "escalate" ? "risk" : "routine");
     setStep(nextMode === "recover" || nextMode === "escalate" ? 2 : 3);
+    setStaffAction("");
   }
 
-  function runNextStep() {
-    setStep((current) => (current >= t.stages.length - 1 ? 0 : current + 1));
+  function resetDemo() {
+    setMode("book");
+    setUrgency("routine");
+    setStep(2);
+    setFile(null);
+    setStaffAction("");
   }
 
   return (
     <main className="shell">
-      <div className="top-actions">
-        <div className="language-switch" aria-label={t.languageLabel}>
-          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">
-            English
-          </button>
-          <button className={language === "sw" ? "active" : ""} onClick={() => setLanguage("sw")} type="button">
-            Kiswahili
-          </button>
+      <div className="topbar">
+        <div>
+          <strong>{t.brand}</strong>
+          <span>{t.disclaimer}</span>
+        </div>
+        <div className="language-switch" aria-label={t.chooseLanguage}>
+          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")} type="button">English</button>
+          <button className={language === "sw" ? "active" : ""} onClick={() => setLanguage("sw")} type="button">Kiswahili</button>
         </div>
       </div>
 
       <section className="hero">
         <div className="hero-copy">
-          <div className="brand-mark">{t.mark}</div>
-          <p className="eyebrow">{t.brand}</p>
+          <div className="brand-mark">NL</div>
           <h1>{t.heroTitle}</h1>
           <p>{t.heroBody}</p>
         </div>
         <div className="hero-proof">
-          {t.proof.map(([label, value]) => (
+          {t.metrics.map(([label, value]) => (
             <div key={label}>
               <span>{label}</span>
               <strong>{value}</strong>
@@ -516,199 +388,186 @@ export default function App() {
         </div>
       </section>
 
-      <section className="mode-bar" aria-label={t.modesAria}>
-        {Object.entries(t.modes).map(([key, item]) => (
-          <button className={mode === key ? "active" : ""} key={key} onClick={() => chooseMode(key)} type="button">
-            <span>{item.label}</span>
-            <small>{item.outcome}</small>
+      <section className="role-tabs" aria-label="Role views">
+        {Object.entries(t.roles).map(([key, label]) => (
+          <button className={role === key ? "active" : ""} key={key} onClick={() => setRole(key)} type="button">{label}</button>
+        ))}
+      </section>
+
+      <section className="scenario-tabs" aria-label="Demo scenarios">
+        {Object.entries(t.modes).map(([key, label]) => (
+          <button className={mode === key ? "active" : ""} key={key} onClick={() => setScenario(key)} type="button">
+            <strong>{label}</strong>
+            <span>{t.modeDescriptions[key]}</span>
           </button>
         ))}
       </section>
 
-      <section className="product-grid">
+      <section className="app-grid">
         <aside className="panel controls">
           <div className="panel-head">
-            <p className="eyebrow">{t.controls.eyebrow}</p>
-            <h2>{t.controls.title}</h2>
+            <p className="eyebrow">{t.controls.title}</p>
+            <h2>{status}</h2>
           </div>
           <label>
             {t.controls.service}
             <select value={serviceKey} onChange={(event) => setServiceKey(event.target.value)}>
-              {Object.entries(t.services).map(([key, item]) => (
-                <option key={key} value={key}>
-                  {item.fullName}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            {t.controls.risk}
-            <select value={urgency} onChange={(event) => setUrgency(event.target.value)}>
-              {Object.entries(t.controls.riskOptions).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {label}
-                </option>
-              ))}
+              {serviceKeys.map((key) => <option key={key} value={key}>{t.services[key][0]}</option>)}
             </select>
           </label>
           <label>
             {t.controls.branch}
-            <select value={branch} onChange={(event) => setBranch(event.target.value)}>
-              {Object.entries(t.controls.branches).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {label}
-                </option>
-              ))}
+            <select value={branchKey} onChange={(event) => setBranchKey(event.target.value)}>
+              {branchKeys.map((key) => <option key={key} value={key}>{t.branches[key]}</option>)}
             </select>
           </label>
-          <button className="run-button" onClick={runNextStep} type="button">
-            {t.controls.run}
-          </button>
-          <div className="safety-boundary">
-            <strong>{t.safetyBoundary.title}</strong>
-            <span>{t.safetyBoundary.body}</span>
+          <label>
+            {t.controls.urgency}
+            <select value={urgency} onChange={(event) => setUrgency(event.target.value)}>
+              {urgencyKeys.map((key) => <option key={key} value={key}>{t.urgency[key]}</option>)}
+            </select>
+          </label>
+          <div className="stepper">
+            {t.steps.map((label, index) => (
+              <button className={index <= step ? "done" : ""} key={label} onClick={() => setStep(index)} type="button">
+                <span>{index + 1}</span>{label}
+              </button>
+            ))}
           </div>
-          <div className="mode-intent">
-            <strong>{selectedMode.headline}</strong>
-            <span>{selectedMode.intent}</span>
+          <div className="button-row">
+            <button onClick={() => setStep((current) => Math.max(0, current - 1))} type="button">{t.controls.back}</button>
+            <button className="primary" onClick={() => setStep((current) => Math.min(t.steps.length - 1, current + 1))} type="button">{t.controls.next}</button>
           </div>
+          <button className="quiet-button" onClick={resetDemo} type="button">{t.controls.reset}</button>
         </aside>
 
-        <section className="center-stage">
-          <article className="panel conversation-card">
+        <section className={role === "patient" ? "workspace" : "workspace muted"}>
+          <article className="panel patient-card">
             <div className="panel-head row">
               <div>
-                <p className="eyebrow">{t.conversation.eyebrow}</p>
-                <h2>{t.conversation.title}</h2>
+                <p className="eyebrow">{t.roles.patient}</p>
+                <h2>{t.patient.title}</h2>
+                <span>{t.patient.subtitle}</span>
               </div>
-              <span className={`status ${selectedMode.accent}`}>{risky ? t.conversation.review : t.conversation.ready}</span>
+              <span className={risky ? "status amber" : "status green"}>{status}</span>
             </div>
-            <div className="phone-frame">
-              {visibleMessages.map(([speaker, text], index) => (
-                <div className={`bubble ${speakerClass(speaker, t.conversation.speakers)}`} key={`${speaker}-${index}`}>
-                  <small>{speaker}</small>
-                  <span>{text}</span>
+            <div className="patient-layout">
+              <div className="form-card">
+                <dl>
+                  <div><dt>{t.fields.patient}</dt><dd>{t.patient.name}</dd></div>
+                  <div><dt>{t.fields.phone}</dt><dd>{t.patient.phone}</dd></div>
+                  <div><dt>{t.fields.channel}</dt><dd>{t.patient.channel}</dd></div>
+                  <div><dt>{t.fields.insurance}</dt><dd>{t.patient.insurance}</dd></div>
+                  <div><dt>{t.fields.branch}</dt><dd>{t.branches[branchKey]}</dd></div>
+                  <div><dt>{t.fields.slot}</dt><dd>{slot}</dd></div>
+                </dl>
+                <label className="upload-box">
+                  <span>{t.controls.upload}</span>
+                  <small>{t.controls.uploadHelp}</small>
+                  <input accept="image/*,.pdf,application/pdf" onChange={(event) => setFile(event.target.files?.[0] || null)} type="file" />
+                </label>
+                <div className="upload-preview">
+                  {previewUrl ? <img alt="" src={previewUrl} /> : <span>{file ? fileLabel(file) : t.controls.noFile}</span>}
                 </div>
-              ))}
+              </div>
+              <ChatCard chat={chat} title={t.chat.title} />
             </div>
           </article>
 
           <article className="panel hpi-card">
             <div className="panel-head row">
               <div>
-                <p className="eyebrow">{t.hpi.eyebrow}</p>
-                <h2>{t.hpi.title}</h2>
+                <p className="eyebrow">{t.hpi.title}</p>
+                <h2>{capturedHpi} / {t.hpi.items.length}</h2>
               </div>
-              <span className={`status ${risky ? "amber" : "green"}`}>
-                {hpiCaptured} / {t.hpi.items.length}
-              </span>
+              <span className="status">{t.controls.consent}</span>
             </div>
+            <p className="boundary">{t.hpi.boundary}</p>
             <div className="hpi-list">
-              {t.hpi.items.map(([label, question, answer], index) => {
-                const captured = index < hpiCaptured;
-                return (
-                  <div className={captured ? "hpi-item captured" : "hpi-item"} key={label}>
-                    <span>{captured ? "✓" : index + 1}</span>
-                    <div>
-                      <strong>{label}</strong>
-                      <small>{question}</small>
-                      <em>{captured ? answer : t.hpi.waiting}</em>
-                    </div>
+              {t.hpi.items.map(([label, question, answer], index) => (
+                <div className={index < capturedHpi ? "hpi-item captured" : "hpi-item"} key={label}>
+                  <span>{index < capturedHpi ? "OK" : index + 1}</span>
+                  <div>
+                    <strong>{label}</strong>
+                    <small>{question}</small>
+                    <em>{index < capturedHpi ? answer : t.hpi.waiting}</em>
                   </div>
-                );
-              })}
-            </div>
-            <p className="hpi-note">{t.hpi.note}</p>
-          </article>
-
-          <article className="panel workflow-card">
-            <div className="panel-head row">
-              <div>
-                <p className="eyebrow">{t.workflow.eyebrow}</p>
-                <h2>{t.workflow.title}</h2>
-              </div>
-              <span className="status green">
-                {t.workflow.step} {step + 1} {t.workflow.of} {t.stages.length}
-              </span>
-            </div>
-            <div className="workflow-board">
-              {t.stages.map((label, index) => (
-                <div className={index <= step ? "workflow-step done" : "workflow-step"} key={label}>
-                  <span>{index + 1}</span>
-                  <strong>{label}</strong>
-                  <small>{index <= step ? t.workflow.complete : t.workflow.waiting}</small>
                 </div>
               ))}
             </div>
           </article>
         </section>
 
-        <aside className="right-stage">
-          <article className="panel appointment">
+        <aside className="side-stack">
+          <article className={role === "staff" ? "panel staff-card" : "panel staff-card muted"}>
             <div className="panel-head">
-              <p className="eyebrow">{t.appointment.eyebrow}</p>
-              <h2>{risky ? t.appointment.paused : service.fullName}</h2>
+              <p className="eyebrow">{t.roles.staff}</p>
+              <h2>{t.staff.title}</h2>
+              <span>{t.staff.subtitle}</span>
             </div>
-            <dl>
-              <div>
-                <dt>{t.appointment.clinician}</dt>
-                <dd>{risky ? t.appointment.clinicalDesk : service.doctor}</dd>
-              </div>
-              <div>
-                <dt>{t.appointment.slot}</dt>
-                <dd>{risky ? t.appointment.immediate : service.slot}</dd>
-              </div>
-              <div>
-                <dt>{t.appointment.branch}</dt>
-                <dd>{branch === "primary" ? service.branch : t.controls.branches[branch]}</dd>
-              </div>
-              <div>
-                <dt>{t.appointment.price}</dt>
-                <dd>{risky ? t.appointment.staffConfirms : service.price}</dd>
-              </div>
-            </dl>
-            <div className="truth-box">{t.appointment.truth}</div>
-          </article>
-
-          <article className="panel dashboard">
-            <div className="panel-head">
-              <p className="eyebrow">{t.dashboard.eyebrow}</p>
-              <h2>{t.dashboard.title}</h2>
-            </div>
-            <div className="metrics">
-              <div>
-                <span>{t.dashboard.inquiries}</span>
-                <strong>{metrics.inquiries}</strong>
-              </div>
-              <div>
-                <span>{t.dashboard.bookings}</span>
-                <strong>{metrics.bookings}</strong>
-              </div>
-              <div>
-                <span>{t.dashboard.recovered}</span>
-                <strong>{metrics.recovered}</strong>
-              </div>
-              <div>
-                <span>{t.dashboard.attendance}</span>
-                <strong>{metrics.attendance}</strong>
-              </div>
-            </div>
-            <div className="value-card">
-              <span>{t.dashboard.revenue}</span>
-              <strong>{metrics.value}</strong>
-              <small>{t.dashboard.disclaimer}</small>
+            <div className="packet">
+              <h3>{t.staff.packet}</h3>
+              <dl>
+                <div><dt>{t.controls.service}</dt><dd>{service}</dd></div>
+                <div><dt>{t.fields.clinician}</dt><dd>{risky ? t.chat.staff : clinician}</dd></div>
+                <div><dt>{t.fields.status}</dt><dd>{status}</dd></div>
+                <div><dt>{t.staff.upload}</dt><dd>{file ? fileLabel(file) : t.controls.noFile}</dd></div>
+              </dl>
+              <button className={risky ? "danger-button" : "primary"} onClick={() => setStaffAction(risky ? t.staff.actionRisk : t.staff.actionPrimary)} type="button">
+                {risky ? t.staff.actionRisk : t.staff.actionPrimary}
+              </button>
+              {staffAction && <p className="action-note">{staffAction}</p>}
+              <p className="source-note">{t.staff.source}</p>
             </div>
           </article>
 
-          <article className="panel escalation">
+          <article className={role === "manager" ? "panel manager-card" : "panel manager-card muted"}>
             <div className="panel-head">
-              <p className="eyebrow">{t.safety.eyebrow}</p>
-              <h2>{risky ? t.safety.activeTitle : t.safety.normalTitle}</h2>
+              <p className="eyebrow">{t.roles.manager}</p>
+              <h2>{t.manager.title}</h2>
+              <span>{t.manager.subtitle}</span>
             </div>
-            <div className={risky ? "alert active" : "alert"}>{risky ? t.safety.active : t.safety.normal}</div>
+            <div className="manager-stats">
+              {managerStats.map(([value, label]) => (
+                <div key={label}><strong>{value}</strong><span>{label}</span></div>
+              ))}
+            </div>
+            <div className="funnel">
+              <h3>{t.manager.funnel}</h3>
+              <div><span style={{ width: "100%" }} />{t.manager.funnelLabels[0]}</div>
+              <div><span style={{ width: risky ? "58%" : "74%" }} />{t.manager.funnelLabels[1]}</div>
+              <div><span style={{ width: recovered ? "68%" : "52%" }} />{t.manager.funnelLabels[2]}</div>
+              <div><span style={{ width: risky ? "34%" : "61%" }} />{t.manager.funnelLabels[3]}</div>
+            </div>
+            <p className="source-note">{t.manager.insight}</p>
           </article>
         </aside>
       </section>
+
+      <section className="workflow-board" aria-label="Workflow">
+        {t.workflow.map((item, index) => (
+          <div className={index <= step ? "workflow-step done" : "workflow-step"} key={item}>
+            <span>{index + 1}</span>
+            <strong>{item}</strong>
+          </div>
+        ))}
+      </section>
     </main>
+  );
+}
+
+function ChatCard({ chat, title }) {
+  return (
+    <div className="chat-card">
+      <h3>{title}</h3>
+      <div className="phone-frame">
+        {chat.map(([speaker, text], index) => (
+          <div className={speaker.includes("NeuroLux") ? "bubble system" : speaker.includes("desk") || speaker.includes("kliniki") ? "bubble staff" : "bubble patient"} key={`${speaker}-${index}`}>
+            <small>{speaker}</small>
+            <span>{text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
