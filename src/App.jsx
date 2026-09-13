@@ -15,6 +15,37 @@ const translations = {
       ["Attendance lift", "+17%"],
       ["Mock value", "TZS 18.6M"],
     ],
+    system: {
+      title: "Built for the way patients actually reach Tanzanian clinics",
+      subtitle: "Web, WhatsApp, and USSD feed the same safe intake, booking, payment, queue, and staff-review workflow.",
+      channels: [
+        ["Web portal", "Patient completes guided intake, uploads history preview, and chooses a slot."],
+        ["WhatsApp desk", "NeuroLux simulates a trained receptionist that captures HPI and confirms next steps."],
+        ["USSD fallback", "*XXX# path for service, branch, slot, and mobile-money payment on basic phones."],
+      ],
+      paymentTitle: "Slot lock and mobile money",
+      paymentBody: "The real system would reserve a slot, wait for M-Pesa/Airtel Money/Tigo Pesa confirmation, then finalize the booking.",
+      paymentStates: ["Slot reserved", "Payment prompt sent", "Webhook confirms", "Booking token issued"],
+      queueTitle: "Arrival and virtual queue",
+      queueBody: "Booked patients, walk-ins, callbacks, and escalations appear together so reception can manage flow before the waiting room fills.",
+      queue: [
+        ["Amina Juma", "Booked", "10:30", "HPI complete"],
+        ["Joseph M.", "Waiting", "11:00", "Walk-in queue"],
+        ["Rehema S.", "Callback", "Today", "Needs staff review"],
+      ],
+      integrationTitle: "Source-of-truth readiness",
+      integrationBody: "Prototype only: these connectors are mocked to show how NeuroLux would sit in front of existing clinic systems.",
+      integrations: ["eHIS / GoTHoMIS", "Clinic calendar", "Mobile money", "WhatsApp/SMS", "FHIR/HL7-ready export"],
+      auditTitle: "Audit trail",
+      audit: ["Request created", "Consent acknowledged", "HPI captured", "Slot reserved", "Staff notified"],
+      labels: {
+        channels: "Omnichannel access",
+        reliability: "Booking reliability",
+        flow: "Patient flow",
+        architecture: "Future architecture",
+        trust: "Trust layer",
+      },
+    },
     roles: {
       patient: "Patient",
       staff: "Staff",
@@ -145,6 +176,37 @@ const translations = {
       ["Ongezeko la mahudhurio", "+17%"],
       ["Thamani ya mfano", "TZS 18.6M"],
     ],
+    system: {
+      title: "Imejengwa kwa namna wagonjwa wanavyofikia kliniki Tanzania",
+      subtitle: "Wavuti, WhatsApp, na USSD huingia kwenye mchakato mmoja salama wa taarifa za awali, miadi, malipo, foleni, na mapitio ya wahudumu.",
+      channels: [
+        ["Tovuti ya mgonjwa", "Mgonjwa anakamilisha fomu elekezi, anaonyesha historia ya faili, na kuchagua muda."],
+        ["Dawati la WhatsApp", "NeuroLux huiga mpokezi aliyefundishwa kukusanya HPI na kuthibitisha hatua inayofuata."],
+        ["USSD kwa simu za kawaida", "Njia ya *XXX# kwa huduma, tawi, muda, na malipo ya mobile money."],
+      ],
+      paymentTitle: "Kuhifadhi muda na mobile money",
+      paymentBody: "Mfumo halisi ungehifadhi muda kwa muda mfupi, kusubiri uthibitisho wa M-Pesa/Airtel Money/Tigo Pesa, kisha kuthibitisha miadi.",
+      paymentStates: ["Muda umehifadhiwa", "Ombi la malipo limetumwa", "Webhook imethibitisha", "Namba ya miadi imetolewa"],
+      queueTitle: "Kufika na foleni ya kidijitali",
+      queueBody: "Walioweka miadi, walk-in, wanaohitaji kupigiwa simu, na kesi zilizopandishwa huonekana pamoja ili mapokezi yadhibiti mtiririko.",
+      queue: [
+        ["Amina Juma", "Ameweka miadi", "10:30", "HPI kamili"],
+        ["Joseph M.", "Anasubiri", "11:00", "Foleni ya walk-in"],
+        ["Rehema S.", "Apigiwe simu", "Leo", "Inahitaji mapitio"],
+      ],
+      integrationTitle: "Tayari kwa chanzo sahihi",
+      integrationBody: "Onyesho pekee: viunganishi hivi ni vya mfano kuonyesha jinsi NeuroLux itakavyokaa mbele ya mifumo ya kliniki.",
+      integrations: ["eHIS / GoTHoMIS", "Kalenda ya kliniki", "Mobile money", "WhatsApp/SMS", "Export ya FHIR/HL7"],
+      auditTitle: "Historia ya ukaguzi",
+      audit: ["Ombi limeundwa", "Ridhaa imekubaliwa", "HPI imekusanywa", "Muda umehifadhiwa", "Wahudumu wamearifiwa"],
+      labels: {
+        channels: "Njia nyingi za kufikia huduma",
+        reliability: "Uhakika wa miadi",
+        flow: "Mtiririko wa wagonjwa",
+        architecture: "Muundo wa baadaye",
+        trust: "Safu ya uaminifu",
+      },
+    },
     roles: {
       patient: "Mgonjwa",
       staff: "Wahudumu",
@@ -542,6 +604,82 @@ export default function App() {
             <p className="source-note">{t.manager.insight}</p>
           </article>
         </aside>
+      </section>
+
+      <section className="system-layer">
+        <article className="panel channel-panel">
+          <div className="panel-head">
+            <p className="eyebrow">{t.system.labels.channels}</p>
+            <h2>{t.system.title}</h2>
+            <span>{t.system.subtitle}</span>
+          </div>
+          <div className="channel-grid">
+            {t.system.channels.map(([label, body], index) => (
+              <div className="channel-card" key={label}>
+                <span>{index + 1}</span>
+                <strong>{label}</strong>
+                <p>{body}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="panel payment-panel">
+          <div className="panel-head">
+            <p className="eyebrow">{t.system.labels.reliability}</p>
+            <h2>{t.system.paymentTitle}</h2>
+            <span>{t.system.paymentBody}</span>
+          </div>
+          <div className="payment-rail">
+            {t.system.paymentStates.map((item, index) => (
+              <div className={index <= Math.min(step, 3) ? "rail-item done" : "rail-item"} key={item}>
+                <span>{index + 1}</span>
+                <strong>{item}</strong>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="panel queue-panel">
+          <div className="panel-head">
+            <p className="eyebrow">{t.system.labels.flow}</p>
+            <h2>{t.system.queueTitle}</h2>
+            <span>{t.system.queueBody}</span>
+          </div>
+          <div className="queue-list">
+            {t.system.queue.map(([name, state, time, note]) => (
+              <div className="queue-row" key={name}>
+                <strong>{name}</strong>
+                <span>{state}</span>
+                <em>{time}</em>
+                <small>{note}</small>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="panel integration-panel">
+          <div className="panel-head">
+            <p className="eyebrow">{t.system.labels.architecture}</p>
+            <h2>{t.system.integrationTitle}</h2>
+            <span>{t.system.integrationBody}</span>
+          </div>
+          <div className="integration-tags">
+            {t.system.integrations.map((item) => <span key={item}>{item}</span>)}
+          </div>
+        </article>
+
+        <article className="panel audit-panel">
+          <div className="panel-head">
+            <p className="eyebrow">{t.system.labels.trust}</p>
+            <h2>{t.system.auditTitle}</h2>
+          </div>
+          <ol>
+            {t.system.audit.map((item, index) => (
+              <li className={index <= Math.min(step + 1, t.system.audit.length - 1) ? "done" : ""} key={item}>{item}</li>
+            ))}
+          </ol>
+        </article>
       </section>
 
       <section className="workflow-board" aria-label="Workflow">

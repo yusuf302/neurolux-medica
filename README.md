@@ -12,6 +12,11 @@ This is a no-cost React/Vite prototype for NeuroLux Medica. It presents the prod
 - A structured HPI intake checklist for duration, onset, nature, periodicity, associated factors, relieving factors, and aggravating factors.
 - Browser-only PDF/image attachment preview that shows file metadata without uploading.
 - A mock appointment engine using approved-schedule language.
+- Web, WhatsApp, and USSD entry points feeding one simulated clinic workflow.
+- Slot-lock and mobile-money confirmation states for a Tanzania-ready booking model.
+- Virtual queue and arrival board for booked patients, walk-ins, callbacks, and escalations.
+- Mock integration readiness for eHIS, GoTHoMIS, clinic calendars, WhatsApp/SMS, and FHIR/HL7-style export.
+- A lightweight audit trail showing how trust and accountability would work in production.
 - Executive metrics for inquiries, bookings, recovered demand, attendance, and revenue influenced.
 
 ## What it does not do
@@ -22,6 +27,10 @@ This is a no-cost React/Vite prototype for NeuroLux Medica. It presents the prod
 - It does not provide diagnosis or treatment plans.
 - It does not connect to WhatsApp, clinic systems, AI APIs, payment systems, or databases.
 - It is not production software.
+
+## Product direction
+
+NeuroLux is positioned as a Tanzania-first patient-access operating system, not a replacement hospital information system. A production version would sit in front of existing clinic/HIS/EMR systems and handle safe intake, booking, mobile-money confirmation, reminders, missed-demand recovery, virtual queue management, staff review, and manager reporting.
 
 ## Running it
 

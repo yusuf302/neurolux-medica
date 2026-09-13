@@ -712,6 +712,163 @@ dd {
   margin-top: 16px;
 }
 
+.system-layer {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.85fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.channel-panel {
+  grid-column: 1 / -1;
+}
+
+.channel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px;
+}
+
+.channel-card,
+.rail-item,
+.queue-row {
+  min-width: 0;
+  border: 1px solid rgba(134, 160, 169, 0.3);
+  border-radius: 8px;
+  background: #f8fbfc;
+}
+
+.channel-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.channel-card > span,
+.rail-item > span {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 999px;
+  background: #062f3a;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 950;
+}
+
+.channel-card strong,
+.rail-item strong,
+.queue-row strong {
+  color: #10262d;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.channel-card p {
+  color: #60737a;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.payment-rail {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+}
+
+.rail-item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+}
+
+.rail-item.done {
+  border-color: rgba(15, 111, 126, 0.45);
+  background: #ecfbf8;
+}
+
+.rail-item.done > span {
+  background: #0f6f7e;
+}
+
+.queue-list {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+}
+
+.queue-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px 12px;
+  align-items: center;
+  padding: 13px;
+}
+
+.queue-row span {
+  border-radius: 999px;
+  background: #def7ec;
+  color: #047857;
+  padding: 5px 9px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.queue-row em {
+  color: #31515a;
+  font-style: normal;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.queue-row small {
+  grid-column: 1 / -1;
+  color: #60737a;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.integration-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 18px;
+}
+
+.integration-tags span {
+  border: 1px solid rgba(15, 111, 126, 0.28);
+  border-radius: 999px;
+  background: #eef8f8;
+  color: #0f6f7e;
+  padding: 8px 10px;
+  font-size: 0.84rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.audit-panel ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 18px 18px 18px 42px;
+}
+
+.audit-panel li {
+  color: #60737a;
+  line-height: 1.4;
+  padding-left: 4px;
+}
+
+.audit-panel li.done {
+  color: #10262d;
+  font-weight: 850;
+}
+
 .workflow-step {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr);
@@ -744,11 +901,13 @@ dd {
 @media (max-width: 1180px) {
   .hero,
   .app-grid,
-  .patient-layout {
+  .patient-layout,
+  .system-layer {
     grid-template-columns: 1fr;
   }
 
-  .side-stack {
+  .side-stack,
+  .channel-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -784,6 +943,7 @@ dd {
   .hero-proof,
   .scenario-tabs,
   .side-stack,
+  .channel-grid,
   .hpi-list,
   .manager-stats,
   .workflow-board {
@@ -809,5 +969,14 @@ dd {
 
   dd {
     text-align: left;
+  }
+
+  .queue-row {
+    grid-template-columns: 1fr;
+  }
+
+  .queue-row span,
+  .queue-row em {
+    width: fit-content;
   }
 }
