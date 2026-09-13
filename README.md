@@ -1,37 +1,53 @@
-# NeuroLux Medica Patient Access OS Prototype
+# NeuroLux Medica Production Web App
 
-This is a no-cost React/Vite prototype for NeuroLux Medica. It presents the product as patient-access and revenue-recovery infrastructure for healthcare organizations, using mock clinic data only.
+NeuroLux Medica is a Tanzania-first patient-access operating system for clinics. It is designed to turn patient requests into booked, reviewed, paid, queued, and followed-up clinic visits while keeping clinical decisions with qualified people.
 
-## What it shows
+## What is included
 
-- A polished buyer-facing healthcare SaaS demo.
-- English and Kiswahili language switching for a Tanzania-ready sales conversation.
-- Role-based views for patient intake, staff workbench, and manager dashboard.
-- Interactive modes for booking, recovered demand, and safe escalation.
-- A simulated patient conversation connected to workflow progress.
-- A structured HPI intake checklist for duration, onset, nature, periodicity, associated factors, relieving factors, and aggravating factors.
-- Browser-only PDF/image attachment preview that shows file metadata without uploading.
-- A mock appointment engine using approved-schedule language.
-- Web, WhatsApp, and USSD entry points feeding one simulated clinic workflow.
-- Slot-lock and mobile-money confirmation states for a Tanzania-ready booking model.
-- Virtual queue and arrival board for booked patients, walk-ins, callbacks, and escalations.
-- Mock integration readiness for eHIS, GoTHoMIS, clinic calendars, WhatsApp/SMS, and FHIR/HL7-style export.
-- A lightweight audit trail showing how trust and accountability would work in production.
-- Executive metrics for inquiries, bookings, recovered demand, attendance, and revenue influenced.
+- Next.js App Router with TypeScript.
+- Mobile-responsive, PWA-ready web experience.
+- Patient, staff, manager, and admin routes.
+- Safe HPI intake limited to seven fields: duration, onset, nature, periodicity, associated factors, relieving factors, and aggravating factors.
+- Appointment, slot, queue, escalation, payment, file metadata, message, and audit data model in Prisma.
+- Mock provider interfaces for WhatsApp/SMS, mobile money, and eHIS/GoTHoMIS/FHIR-style export.
+- API endpoints for health checks and appointment creation.
+- Polished healthcare SaaS UI with mobile-friendly navigation.
 
-## What it does not do
+## Safety boundary
 
-- It does not use real patient data.
-- It does not upload, store, or transmit attached files.
-- It does not provide medical advice.
-- It does not provide diagnosis or treatment plans.
-- It does not connect to WhatsApp, clinic systems, AI APIs, payment systems, or databases.
-- It is not production software.
+NeuroLux is an intake, access, booking, and workflow product. It must not provide diagnosis, treatment plans, medication advice, or clinical reassurance. Risky or unclear cases must be routed to human review.
 
-## Product direction
+## Local setup
 
-NeuroLux is positioned as a Tanzania-first patient-access operating system, not a replacement hospital information system. A production version would sit in front of existing clinic/HIS/EMR systems and handle safe intake, booking, mobile-money confirmation, reminders, missed-demand recovery, virtual queue management, staff review, and manager reporting.
+1. Install dependencies:
 
-## Running it
+   ```bash
+   pnpm install
+   ```
 
-Install dependencies with `pnpm install`, run locally with `pnpm dev`, and build with `pnpm build`. The production build is static and can be hosted for free with GitHub Pages.
+2. Copy environment values:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Add a real PostgreSQL `DATABASE_URL` when you are ready to run migrations.
+
+4. Build and check:
+
+   ```bash
+   pnpm typecheck
+   pnpm build
+   ```
+
+5. Run locally:
+
+   ```bash
+   pnpm dev
+   ```
+
+## Production direction
+
+The first deployable release is web-first. Real clinic deployment should add production authentication, encrypted file storage, a managed PostgreSQL database, audit-log retention policy, role-based access enforcement, and approved providers for WhatsApp/SMS and mobile money.
+
+The future mobile app should be Flutter after the core web workflow is validated with clinics.

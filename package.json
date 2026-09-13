@@ -4,15 +4,25 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1"
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^5.1.1",
-    "vite": "^7.2.7",
+    "@prisma/client": "^7.2.0",
+    "next": "^16.0.10",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "zod": "^4.2.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^24.10.2",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "prisma": "^7.2.0",
+    "typescript": "^5.9.3"
+  }
 }
