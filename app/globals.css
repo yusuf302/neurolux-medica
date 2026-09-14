@@ -36,6 +36,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
@@ -283,7 +288,8 @@ h2 {
 
 .field input,
 .field select,
-.field textarea {
+.field textarea,
+.inline-input {
   width: 100%;
   min-height: 46px;
   border: 1px solid rgba(139, 160, 168, 0.42);
@@ -296,6 +302,14 @@ h2 {
 .field textarea {
   min-height: 92px;
   resize: vertical;
+}
+
+.field.compact textarea {
+  min-height: 72px;
+}
+
+.inline-input {
+  flex: 1 1 260px;
 }
 
 .row {
@@ -314,9 +328,81 @@ h2 {
 .hpi-list,
 .case-list,
 .timeline,
-.slot-list {
+.slot-list,
+.workflow {
   display: grid;
   gap: 10px;
+}
+
+.workflow {
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+}
+
+.flow-step,
+.case-button,
+.funnel-row {
+  min-width: 0;
+  border: 1px solid rgba(139, 160, 168, 0.28);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #10262d;
+  padding: 14px;
+  text-align: left;
+}
+
+.flow-step {
+  display: grid;
+  gap: 8px;
+}
+
+.flow-step span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 999px;
+  background: #eaf1f3;
+  color: #24444d;
+  font-weight: 900;
+}
+
+.flow-step.done {
+  border-color: rgba(15, 111, 126, 0.34);
+  background: #ecfbf8;
+}
+
+.flow-step.done span,
+.flow-step.active span {
+  background: #0f6f7e;
+  color: #ffffff;
+}
+
+.flow-step.active {
+  border-color: rgba(15, 111, 126, 0.7);
+}
+
+.flow-step strong,
+.case-button strong,
+.funnel-row span {
+  overflow-wrap: anywhere;
+}
+
+.case-button {
+  display: grid;
+  gap: 7px;
+  cursor: pointer;
+}
+
+.case-button.active {
+  border-color: rgba(15, 111, 126, 0.6);
+  background: #ecfbf8;
+}
+
+.funnel-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
 }
 
 .card {
@@ -365,6 +451,10 @@ h2 {
   border-radius: 10px;
   background: linear-gradient(180deg, #f7fbfc, #ffffff);
   padding: 14px;
+}
+
+.chat.compact-chat {
+  min-height: 260px;
 }
 
 .bubble {
@@ -438,6 +528,10 @@ h2 {
   .span-8 {
     grid-column: 1 / -1;
   }
+
+  .workflow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 760px) {
@@ -479,6 +573,10 @@ h2 {
 
   .bubble {
     width: 100%;
+  }
+
+  .workflow {
+    grid-template-columns: 1fr;
   }
 
   .bottom-nav {

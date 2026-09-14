@@ -27,7 +27,8 @@ export default function HomePage() {
             virtual queue management, staff escalation, and manager visibility in one deployable web app.
           </p>
           <div className="row">
-            <Link className="primary" href="/patient">Start patient flow</Link>
+            <Link className="primary" href="/login">Open role login</Link>
+            <Link className="secondary" href="/patient">Start patient flow</Link>
             <Link className="secondary" href="/staff">Open staff workbench</Link>
           </div>
         </div>

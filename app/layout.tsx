@@ -15,6 +15,7 @@ export const viewport: Viewport = {
 };
 
 const links = [
+  ["/login", "Login", "Choose role"],
   ["/patient", "Patient", "Intake, HPI, booking"],
   ["/staff", "Staff", "Cases and escalation"],
   ["/manager", "Manager", "Demand and queue analytics"],
