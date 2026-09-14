@@ -1,5 +1,5 @@
-import { PatientFlow } from "@/components/dynamic/patient-flow";
+import NeuroLuxMedica from "@/components/neurolux-medica-ui";
 
 export default function PatientPage() {
-  return <PatientFlow />;
+  return <NeuroLuxMedica initialRole="patient" />;
 }

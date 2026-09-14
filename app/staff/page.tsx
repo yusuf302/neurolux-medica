@@ -1,5 +1,5 @@
-import { StaffWorkbench } from "@/components/dynamic/staff-workbench";
+import NeuroLuxMedica from "@/components/neurolux-medica-ui";
 
 export default function StaffPage() {
-  return <StaffWorkbench />;
+  return <NeuroLuxMedica initialRole="staff" />;
 }

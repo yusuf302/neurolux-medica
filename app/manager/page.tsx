@@ -1,5 +1,5 @@
-import { ManagerDashboard } from "@/components/dynamic/manager-dashboard";
+import NeuroLuxMedica from "@/components/neurolux-medica-ui";
 
 export default function ManagerPage() {
-  return <ManagerDashboard />;
+  return <NeuroLuxMedica initialRole="manager" />;
 }
