@@ -1,4 +1,8 @@
-# NeuroLux Medica Production Web App
+# NeuroLux Medica
+
+**Clinic-access workflow prototype · Next.js · TypeScript · Prisma**
+
+> **Status:** prototype under development. Messaging, payment and health-system integrations use mock interfaces; real clinic deployment requires the production controls described below.
 
 NeuroLux Medica is a Tanzania-first patient-access operating system for clinics. It is designed to turn patient requests into booked, reviewed, paid, queued, and followed-up clinic visits while keeping clinical decisions with qualified people.
 
@@ -51,3 +55,4 @@ NeuroLux is an intake, access, booking, and workflow product. It must not provid
 The first deployable release is web-first. Real clinic deployment should add production authentication, encrypted file storage, a managed PostgreSQL database, audit-log retention policy, role-based access enforcement, and approved providers for WhatsApp/SMS and mobile money.
 
 The future mobile app should be Flutter after the core web workflow is validated with clinics.
+
